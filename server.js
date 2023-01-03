@@ -9,17 +9,25 @@ const cookieParser = require("cookie-parser");
 
 const app = express();
 
+var allowedOrigins = ["http://localhost:3000","https://himalyan-journal.netlify.app/"];
 // Middlewares
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(
-  cors({
-    origin: ["http://localhost:3000","https://himalyan-journal.netlify.app/"],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin: function(origin, callback){
+    // allow requests with no origin 
+    // (like mobile apps or curl requests)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      var msg = 'The CORS policy for this site does not ' +
+                'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  }
+}));
 
 app.use(express.static(`${__dirname}/uploads`))
 // Routes Middleware
