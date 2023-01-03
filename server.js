@@ -15,10 +15,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(
-  cors({
-    origin: ["https://himalyan-journal.netlify.app/","http://localhost:3000",],
-    credentials: true,
-  })
+  cors()
 );
 
 app.use(express.static(`${__dirname}/uploads`))
